@@ -16,6 +16,7 @@ entity SchoolSubject:
         natural:
             природовение
             природа
+            окружающий мир
         music:
             музыка
             пение
