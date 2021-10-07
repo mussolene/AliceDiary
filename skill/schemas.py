@@ -61,3 +61,15 @@ class PlannedLesson:
 class Homework:
     lesson: str
     task: str
+
+    @property
+    def link_url(self):
+        result = ""
+        for key, value in subjects.items():
+            name_subject = ""
+            if self.lesson in value:
+                name_subject = key
+            if not image_ids.get(name_subject) is None:
+                result = image_ids[name_subject]
+
+        return result

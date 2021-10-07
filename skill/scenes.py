@@ -978,7 +978,10 @@ def _split_homework(homework: list):
 
 def _prepare_cards_hw(homeworks: List[Homework]):
     return [
-        image_button(title=x.lesson.capitalize(), description=x.task) for x in homeworks
+        image_button(
+            title=x.lesson.capitalize(), description=x.task, image_id=x.link_url
+        )
+        for x in homeworks
     ]
 
 
