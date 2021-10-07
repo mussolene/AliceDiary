@@ -32,6 +32,7 @@ entity SchoolSubject:
             физическая культура
             физра
             фезра
+            плавание
         nativeLanguage:
             родной язык
         foundationsOfReligiousCulturesAndSecularEthics:
