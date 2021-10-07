@@ -23,6 +23,7 @@ NEXT_BUTTON = "next_button"
 # temporary
 TEMP_SCHOOL = "temp_school"
 TEMP_NAME = "temp_name"
+TEMP_LAST_NAME = "temp_last_name"
 TEMP_CLASS_ID = "temp_class_id"
 
 # homework
@@ -37,4 +38,12 @@ TEMP_CONTEXT = "context"
 MUST_BE_SAVE = {PREVIOUS_STATE, NEXT_BUTTON}
 
 # Эти состояния сохраняются на каждый ход
-PERMANENT_VALUES = {TEMP_NAME, TEMP_SCHOOL, TEMP_CLASS_ID, LIST_HW, SKIP_HW, TASKS_HW}
+PERMANENT_VALUES = {
+    TEMP_NAME,
+    TEMP_LAST_NAME,
+    TEMP_SCHOOL,
+    TEMP_CLASS_ID,
+    LIST_HW,
+    SKIP_HW,
+    TASKS_HW,
+}

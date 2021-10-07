@@ -7,6 +7,7 @@ from skill.entities import image_ids, subjects
 @dataclass
 class Student:
     name: str
+    last_name: str
     school_id: str
     class_id: str
 

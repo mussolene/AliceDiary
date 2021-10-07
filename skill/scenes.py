@@ -238,6 +238,27 @@ class Settings_FirstScene(GlobalScene):
 
     def handle_local_intents(self, request: Request):
         if entities.FIO in request.entities_list:
+            if not _is_correct_name(request):
+                return Settings_FirstScene_FIO()
+            if get_student_from_request(request) is None:
+                return Settings_GetSchool()
+            else:
+                return Settings_Duplicate()
+
+    def fallback(self, request: Request):
+        return global_fallback(self, request, texts.start_setting_fallback())
+
+
+class Settings_FirstScene_FIO(GlobalScene):
+    def reply(self, request: Request):
+        text, tts = texts.FIO_needs()
+
+        return self.make_response(request, text, tts, buttons=HELP)
+
+    def handle_local_intents(self, request: Request):
+        if entities.FIO in request.entities_list:
+            if not _is_correct_name(request):
+                return Settings_FirstScene_FIO()
             if get_student_from_request(request) is None:
                 return Settings_GetSchool()
             else:
@@ -271,6 +292,7 @@ class Settings_Duplicate(GlobalScene):
 class Settings_GetSchool(GlobalScene):
     def reply(self, request: Request):
         name = request.entity(entities.FIO)[0]["first_name"].capitalize()
+        last_name = request.entity(entities.FIO)[0]["last_name"].capitalize()
 
         text, tts = texts.what_school(name)
         return self.make_response(
@@ -278,7 +300,7 @@ class Settings_GetSchool(GlobalScene):
             text,
             tts,
             buttons=HELP,
-            state={state.TEMP_NAME: name},
+            state={state.TEMP_NAME: name, state.TEMP_LAST_NAME: last_name},
         )
 
     def handle_local_intents(self, request: Request):
@@ -422,7 +444,9 @@ class Settings_Confirm(GlobalScene):
         class_id = str(class_num) + class_letter.upper()
 
         text, tts = texts.confirm_settings(
-            request.session.get(state.TEMP_NAME),
+            request.session.get(state.TEMP_LAST_NAME)
+            + " "
+            + request.session.get(state.TEMP_NAME),
             request.session.get(state.TEMP_SCHOOL),
             class_id,
         )
@@ -448,9 +472,10 @@ class Settings_OneMore(GlobalScene):
         text, tts = texts.one_more_student()
 
         name = request.session.get(state.TEMP_NAME)
+        last_name = request.session.get(state.TEMP_LAST_NAME)
         school = request.session.get(state.TEMP_SCHOOL)
         class_id = request.session.get(state.TEMP_CLASS_ID)
-        students.append(Student(name, school, class_id))
+        students.append(Student(name, last_name, school, class_id))
         return self.make_response(
             request,
             text,
@@ -1009,6 +1034,13 @@ def _prepare_cards_todo(todo):
         )
         for name, task in todo.items()
     ]
+
+
+def _is_correct_name(request: Request):
+    return (
+        request.entity(entities.FIO)[0].get("first_name") is not None
+        and request.entity(entities.FIO)[0].get("last_name") is not None
+    )
 
 
 def _list_scenes():
