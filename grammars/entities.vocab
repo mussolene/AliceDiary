@@ -53,6 +53,8 @@ entity SchoolSubject:
             краеведение
         history:
             история
+            история россии
+            всеобщая история
         literature:
             литература
             литра
