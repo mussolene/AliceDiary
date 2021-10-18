@@ -582,17 +582,10 @@ class GetSchedule(GlobalScene):
             )
         else:
             count = sum(c.count for c in lessons_list)
-            lessons = _split_homework(lessons_list)[0]
+            lessons = lessons_list
             cards = _prepare_cards_lessons(lessons)
             text, tts = texts.tell_about_schedule(lessons, count)
-            if len(lessons_list) > 3:
-                buttons = [
-                    button("Назад"),
-                    button("Дальше"),
-                    button("Главное меню"),
-                ]
-            else:
-                buttons = [button("Домашнее задание"), button("Главное меню")]
+            buttons = [button("Домашнее задание"), button("Главное меню")]
             return self.make_response(
                 request,
                 text_title + ". " + text,
@@ -632,9 +625,6 @@ class GetSchedule(GlobalScene):
 
 
 class TellAboutSchedule(GlobalScene):
-    def __init__(self, step=0):
-        self.__step = step
-
     def reply(self, request: Request):
         context = request.session.get(state.TEMP_CONTEXT, {})
         req_date = None
@@ -653,8 +643,7 @@ class TellAboutSchedule(GlobalScene):
         cards = _prepare_cards_lessons(lessons[step])
         text, tts = texts.tell_about_schedule(lessons[step], full)
         buttons = [
-            button("Назад"),
-            button("Дальше"),
+            button("Расписание"),
             button("Главное меню"),
         ]
 
@@ -760,9 +749,6 @@ class GetHomework(GlobalScene):
 
 
 class TellAboutHomework(GlobalScene):
-    def __init__(self, step=0):
-        self.__step = step
-
     def reply(self, request: Request):
         context = request.session.get(state.TEMP_CONTEXT, {})
         req_date = None
