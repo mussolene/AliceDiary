@@ -721,17 +721,9 @@ class GetHomework(GlobalScene):
                 },
             )
         else:
-            hw = _split_homework(homework)[0]
-            cards = _prepare_cards_hw(hw)
-            text, tts = texts.tell_about_homework(hw, len(homework))
-            if len(homework) > 3:
-                buttons = [
-                    button("Назад"),
-                    button("Дальше"),
-                    button("Главное меню"),
-                ]
-            else:
-                buttons = DEFAULT_BUTTONS
+            cards = _prepare_cards_hw(homework)
+            text, tts = texts.tell_about_homework(homework, len(homework))
+            buttons = DEFAULT_BUTTONS
             return self.make_response(
                 request,
                 text_title + ". " + text,
@@ -782,27 +774,18 @@ class TellAboutHomework(GlobalScene):
         text_title, tts_title = texts.title(student, req_date)
 
         hw_dict = request.session.get(state.LIST_HW)
-        hw = _split_homework([Homework(**x) for x in hw_dict])
-        full = request.session.get(state.TASKS_HW)
-        step = (request.session.get(state.SKIP_HW) + self.__step) % len(hw)
+        hw = [Homework(**x) for x in hw_dict]
 
-        cards = _prepare_cards_hw(hw[step])
-        text, tts = texts.tell_about_homework(hw[step], full)
-        if full > 3:
-            buttons = [
-                button("Назад"),
-                button("Дальше"),
-                button("Главное меню"),
-            ]
-        else:
-            buttons = DEFAULT_BUTTONS
+        cards = _prepare_cards_hw(hw)
+        text, tts = texts.tell_about_homework(hw, len(hw))
+        buttons = DEFAULT_BUTTONS
         return self.make_response(
             request,
             text_title + ". " + text,
             tts_title + " " + tts,
             card=image_list(cards, header=text_title + ". " + text),
             buttons=buttons,
-            state={state.SKIP_HW: step, state.TEMP_CONTEXT: context},
+            state={state.SKIP_HW: 0, state.TEMP_CONTEXT: context},
         )
 
     def handle_local_intents(self, request: Request):
