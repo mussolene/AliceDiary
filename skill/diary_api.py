@@ -47,17 +47,10 @@ def get_real_schedule(
     if response.status_code == 500:
         return []
 
-    result = []
-    prev = None
-    prev_lesson = None
-    for lesson in response.json():
-        if lesson["subject_name"] == prev:
-            prev_lesson.inc()
-        else:
-            prev = lesson["subject_name"]
-            prev_lesson = PlannedLesson(lesson["subject_name"], None, None, 1)
-            result.append(prev_lesson)
-
+    result = [
+        PlannedLesson(lesson["subject_name"], None, None, 1)
+        for lesson in response.json()
+    ]
     return result
 
 

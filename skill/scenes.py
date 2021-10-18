@@ -635,13 +635,10 @@ class TellAboutSchedule(GlobalScene):
         student = Student(**context.get("student"))
         text_title, tts_title = texts.title(student, req_date)
 
-        lessons_list = request.session.get(state.LIST_HW)
-        lessons = _split_homework([PlannedLesson(**x) for x in lessons_list])
-        full = request.session.get(state.TASKS_HW)
-        step = (request.session.get(state.SKIP_HW) + self.__step) % len(lessons)
+        lessons_list = request.session.get(state.TASKS_HW)
 
-        cards = _prepare_cards_lessons(lessons[step])
-        text, tts = texts.tell_about_schedule(lessons[step], full)
+        cards = _prepare_cards_lessons(lessons_list)
+        text, tts = texts.tell_about_schedule(lessons_list, lessons_list)
         buttons = [
             button("Расписание"),
             button("Главное меню"),
@@ -653,7 +650,7 @@ class TellAboutSchedule(GlobalScene):
             tts_title + " " + tts,
             card=image_list(cards, header=text_title + ". " + text),
             buttons=buttons,
-            state={state.SKIP_HW: step, state.TEMP_CONTEXT: context},
+            state={state.SKIP_HW: 0, state.TEMP_CONTEXT: context},
         )
 
     def handle_local_intents(self, request: Request):
