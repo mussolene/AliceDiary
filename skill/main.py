@@ -70,6 +70,6 @@ def get_id_scene(request: Request):
     if res is None and GET_SCHEDULE in request.intents:
         res = "get_schedule"
     elif res is None and RESET in request.intents:
-        res = "Settings_Reset"
+        res = "Settings_ResetConfirm"
 
     return res
