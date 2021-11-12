@@ -262,7 +262,7 @@ class Settings_GetId(GlobalScene):
 class Settings_Confirm(GlobalScene):
     def reply(self, request: Request):
         name = request.session.get(state.TEMP_NAME)
-        id = request.entity(entities.NUMBER)[0]
+        id = "".join(str(x) for x in request.entity(entities.NUMBER))
 
         text, tts = texts.confirm_settings(name, id)
 
