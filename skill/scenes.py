@@ -88,7 +88,7 @@ class Welcome(GlobalScene):
         if intents.CONFIRM in request.intents:
             students = get_all_students_from_request(request)
             if students:
-                return GetSchedule()
+                return get_scene_for_schedule(request)
             else:
                 return Settings_FirstScene()
         elif intents.REJECT in request.intents:
